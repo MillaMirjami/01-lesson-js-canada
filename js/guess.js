@@ -1,12 +1,15 @@
 // STEP 1: Initialize game variables
 // STEP 1a: Pick random number
+let randomNumber = Math.floor(Math.random() * 100) + 1;
 /* */
 // STEP 1b: Create variables to represent the three paragraphs above that will contain user feedback
 const guesses = document.querySelector('p#guesses');
 const lastResult = document.querySelector('p#lastResult');
+const lowOrHi = document.querySelector('#lowOrHi'); // don't need the p cause it's extra info since ids are unique
 /* */
 // STEP 1c: Create variables to represent the guessing form
 const guessField = document.querySelector('input#guessField');
+const button = document.querySelector("button");
 /* */
 // STEP 1d: Create variables to initialize counter for number of guesses
 let guessCount = 1;
@@ -30,6 +33,7 @@ function checkGuess() {
     if (userGuess === randomNumber) {
         // Output a success message, then end the game
         /* */
+        lastResult.textContent = 'You guessed right!';
         lastResult.style.backgroundColor = 'green';
         lowOrHi.textContent = '';
         setGameOver();
@@ -37,6 +41,7 @@ function checkGuess() {
     } else if (guessCount === 10) {
         // Output an appropriate message, then end the game
         /* */
+        lastResult.textContent = "Oh nou... You're all out of guesses";
         setGameOver();
     // STEP 3f: Conditional - the user's guess is incorrect
     } else {
@@ -44,7 +49,7 @@ function checkGuess() {
         lastResult.textContent = 'Wrong!';
         lastResult.style.backgroundColor = 'red';
         // If the guess is too low, let the user know
-        if (userGuess /* */) {
+        if (userGuess < randomNumber) {
             lowOrHi.textContent = 'Too low.';
         // Else if the guess is too high, let the user know
         } else if (userGuess > randomNumber) {
@@ -53,6 +58,7 @@ function checkGuess() {
     }
     // STEP 3g: Increment the guess count, move focus to the guess field for the next guess, and clear out the old input
     /* */
+    guessCount ++;
     guessField.value = '';
     guessField.focus();
     // STEP 3h: Proceed to the bottom of this file, just before we close out the SCRIPT element
@@ -62,10 +68,12 @@ function checkGuess() {
 function setGameOver() {
     // STEP 4a: Disable the guessing field and submit button
     /* */
-    guessSubmit.disabled = true;
+    guessField.disabled = true;
+    button.disabled = true;
     // STEP 4b: Build a new button to start a new game
     resetButton = document.createElement('button');
     resetButton.textContent = 'New game';
+    document.body.appendChild(resetButton);
     /* */
     // STEP 4c: Add a click event to the new button that calls resetGame function
     resetButton.addEventListener('click', resetGame);
@@ -84,7 +92,7 @@ function resetGame() {
     /* */
     // STEP 5d: Re-enable the guessing form, clear out any old input, then put focus on the field
     guessField.disabled = false;
-    guessSubmit.disabled = false;
+    button.disabled = false;
     guessField.value = '';
     guessField.focus();
     // STEP 5e: Change background color of lastResult paragraph back to white
@@ -94,3 +102,4 @@ function resetGame() {
 }
 // STEP 3i: Add an event listener for the guess form button that calls the checkGuess function
 /* */
+button.addEventListener("click", checkGuess);
